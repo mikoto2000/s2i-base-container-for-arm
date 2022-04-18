@@ -1,5 +1,5 @@
 # This image is the base image for all s2i configurable container images.
-FROM registry.centos.org/centos/centos:7
+FROM centos:7
 
 ENV SUMMARY="Base image which allows using of source-to-image."	\
     DESCRIPTION="The s2i-core image provides any images layered on top of it \
@@ -50,9 +50,11 @@ RUN rpmkeys --import file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 && \
   scl-utils \
   tar \
   unzip \
-  yum-utils" && \
+  yum-utils \
+  nss_wrapper" && \
   mkdir -p ${HOME}/.pki/nssdb && \
   chown -R 1001:0 ${HOME}/.pki && \
+  yum install -y epel-release && \
   yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
   rpm -V $INSTALL_PKGS && \
   yum -y clean all --enablerepo='*'
